@@ -1,0 +1,56 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username VARCHAR,
+  firstname VARCHAR,
+  lastname VARCHAR,
+  email VARCHAR,
+  isVerified BOOLEAN,
+  course VARCHAR,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS posts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title VARCHAR,
+  body TEXT,
+  media_link VARCHAR,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP,
+  user_id INTEGER,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS likes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  post_id INTEGER,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS dislikes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  post_id INTEGER,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS otp (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  otp VARCHAR,
+  expiry_time TIMESTAMP,
+  created_at TIMESTAMP,
+  user_id INTEGER,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS followers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  follower_id INTEGER,
+  following_id INTEGER,
+  created_at TIMESTAMP,
+  FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
+);
