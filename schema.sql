@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR,
   firstname VARCHAR,
   lastname VARCHAR,
+  passwords VARCHAR,
   email VARCHAR,
   isVerified BOOLEAN,
   course VARCHAR,
