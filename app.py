@@ -41,6 +41,16 @@ def register():
     db.execute("Insert into users(username, passwords) Values (?,?)",(username, generate_password_hash(password) ))
     db.commit()
   return "Registered"
+
+#Login route
+@app.route('/login', methods=['POST'])
+def login():
+  if request.method == 'POST':
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    db = get_db()
       
 
 if __name__ == '__main__':
