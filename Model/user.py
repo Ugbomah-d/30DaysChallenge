@@ -11,6 +11,16 @@ class User(db.Model):
   password =db.Column(db.String(80))
   course =db.Column(db.String(80))
 
+  #Converts to dictionary
+  def to_dict(self):
+    return{"id":self.id,
+         "username":self.username,
+         "password":self.password,
+         "email": self.email
+}
+
+
+
 def __repr__(self):
   return f'<User {self.username}>'
 
