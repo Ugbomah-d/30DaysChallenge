@@ -32,6 +32,11 @@ def registration():
 
   if not username or not password or not email:
     return jsonify({"error":'No username or password'}), 405
+  
+  user = User.query.filter_by(username=username).first()
+
+  if user:
+    return jsonify({"Message": 'User exists'}), 400
 
   #Hash password
   hashed_password = generate_password_hash(password)
