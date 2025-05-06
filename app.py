@@ -25,6 +25,7 @@ def registration():
     return jsonify({"error":'Method Not Allowed'}), 405   
   
   data = request.get_json()
+
   username = data.get('username')
   password = data.get('password')
   email = data.get('email')
@@ -44,7 +45,28 @@ def registration():
 
   return 'Successful', 200
 
+@app.route('/login', methods =['POST'])
+def login():
+  
+  if request.method != 'POST':
+    return jsonify({"Error":'Method Not Allowed'}), 405   
+  
+  data = request.get_json()
 
+  username = data.get('username')
+  password = data.get('password')
+
+  #Find User
+  user = User.query.filter_by(username=username).first()
+
+  if not user:
+    return jsonify({"Error": 'User not found'}), 404
+  
+  #Compare passwords
+  if not check_password_hash(user.password, password):
+    return jsonify({"Error": 'Invalid Passwordd'}), 401
+  
+  return jsonify({"message": f"{user.username} logged in sucessfully"})
 
 @app.route('/user/display')
 def displayUsers():
