@@ -2,6 +2,7 @@ from flask import Flask, g, request, jsonify
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from Model.user import db, User
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
 load_dotenv()
@@ -9,8 +10,19 @@ load_dotenv()
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key ='ELDIN RING'
 
 db.init_app(app)
+
+# Initialize LoginManager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# Load user from session
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 with app.app_context():
   db.create_all()
@@ -71,7 +83,20 @@ def login():
   if not check_password_hash(user.password, password):
     return jsonify({"Error": 'Invalid Passwordd'}), 401
   
+  login_user(user)
   return jsonify({"message": f"{user.username} logged in sucessfully"})
+
+@app.route('/dashboard')
+@login_required
+def display():
+  return jsonify({"message": f'welcome {current_user.username}'})
+
+@app.route('/logout')
+@login_required
+def logout():
+  logout_user()
+  return jsonify({"message": "Logged out successfully"}), 200
+
 
 @app.route('/user/display')
 def displayUsers():
